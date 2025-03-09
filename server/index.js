@@ -5,7 +5,12 @@ const dotenv = require("dotenv");
 const AuthRoute = require("./Routers/AuthRoute");
 const ServiceRoute = require("./Routers/ServiceRoute");
 const app = express();
-
+process.on("uncaughtException", (err) => {
+  console.log(`Error: ${err.message}`);
+  console.log("Shutting down server...");
+  console.log(err.stack);
+  process.exit(1);
+});
 dotenv.config();
 
 app.use(cors({
@@ -36,4 +41,13 @@ app.get("/", (req, res) => {
 
 app.listen(process.env.PORT, () => {
   console.log("Server listening");
+});
+
+process.on("unhandledRejection", (err) => {
+  console.log("Unhandled rejection:", err.message);
+  console.log("Shutting down server...");
+  server.close(() => {
+    console.log("Server closed.");
+    process.exit(1);
+  });
 });
