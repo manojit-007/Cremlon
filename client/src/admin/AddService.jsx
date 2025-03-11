@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useState, useRef, useEffect } from "react";
-import Loader from "@/lib/Loader.jsx";
+import Loader from "@/lib/Loader";
 import { Trash, Upload } from "lucide-react";
 import apiClient from "@/ApiClient/ApiClient";
 import { toast } from "sonner";
