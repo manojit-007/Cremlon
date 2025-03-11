@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useNavigate, useParams } from "react-router-dom";
 
-const EditService = () => {
+const EditPost = () => {
   const { id } = useParams();
   const navigate= useNavigate();
   const [formData, setFormData] = useState({
@@ -16,8 +16,7 @@ const EditService = () => {
       public_id: "",
       url: "",
     },
-    price: "",
-    description: "",
+    comment: "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -25,7 +24,7 @@ const EditService = () => {
     const fetchService = async () => {
       setLoading(true);
       try {
-        const response = await apiClient.get(`/service/${id}`);
+        const response = await apiClient.get(`/post/${id}`);
         setFormData(response.data.data);
       } catch (error) {
         toast.error("Failed to fetch service data.");
@@ -40,7 +39,7 @@ const EditService = () => {
   const deleteService = async () => {
     try {
       setLoading(true);
-      await apiClient.delete(`/service/${id}`);
+      await apiClient.delete(`/post/${id}`);
       toast.success("Service deleted successfully!");
       navigate(-1)
     } catch (error) {
@@ -61,10 +60,11 @@ const EditService = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      await apiClient.put(`/service/${id}`, formData, {
+      await apiClient.put(`/post/${id}`, formData, {
         headers: { "Content-Type": "application/json" },
       });
       toast.success("Service updated successfully!");
+      navigate(-1)
     } catch (error) {
       toast.error("Failed to update service.");
       console.error(error);
@@ -75,7 +75,7 @@ const EditService = () => {
 
   return (
     <section className="w-full max-w-md p-4 mx-auto">
-      <h2 className="text-lg font-semibold mb-4">Edit Service</h2>
+      <h2 className="text-lg font-semibold mb-4">Edit Post</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <Label htmlFor="name">Service Name</Label>
         <Input
@@ -86,22 +86,14 @@ const EditService = () => {
           placeholder="Enter service name"
         />
 
-        <Label htmlFor="price">Price</Label>
-        <Input
-          id="price"
-          name="price"
-          value={formData.price}
-          onChange={handleInputChange}
-          placeholder="Enter price"
-        />
 
-        <Label htmlFor="description">Description</Label>
+        <Label htmlFor="description">Comment</Label>
         <Textarea
           id="description"
-          name="description"
-          value={formData.description}
+          name="comment"
+          value={formData.comment}
           onChange={handleInputChange}
-          placeholder="Enter description"
+          placeholder="Enter comment"
         />
 
         <Label htmlFor="image">Image</Label>
@@ -127,4 +119,4 @@ const EditService = () => {
   );
 };
 
-export default EditService;
+export default EditPost;

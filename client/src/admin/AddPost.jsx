@@ -8,21 +8,20 @@ import { Trash, Upload } from "lucide-react";
 import apiClient from "@/ApiClient/ApiClient";
 import { toast } from "sonner";
 
-const AddService = () => {
+const AddPost = () => {
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(null);
   const fileRef = useRef(null);
   const [imageUpload, setImageUpload] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
-    price: "",
+    comment: "",
     image: { public_id: "", url: "" },
-    description: "",
   });
 
   // Load form data from local storage on mount
   useEffect(() => {
-    const savedData = localStorage.getItem("addServiceForm");
+    const savedData = localStorage.getItem("addPostForm");
     if (savedData) {
       const parsedData = JSON.parse(savedData);
       setFormData(parsedData);
@@ -32,20 +31,19 @@ const AddService = () => {
 
   // Save form data to local storage
   useEffect(() => {
-    localStorage.setItem("addServiceForm", JSON.stringify(formData));
+    localStorage.setItem("addPostForm", JSON.stringify(formData));
   }, [formData]);
 
   const resetForm = () => {
     setFormData({
       name: "",
-      price: "",
+      comment: "",
       image: { public_id: "", url: "" },
-      description: "",
     });
     setPreview(null);
     setImageUpload(null);
     fileRef.current && (fileRef.current.value = null);
-    localStorage.removeItem("addServiceForm");
+    localStorage.removeItem("addPostForm");
   };
 
   const handleImageSelect = (e) => {
@@ -68,7 +66,7 @@ const AddService = () => {
       imageFormData.append("image", imageUpload);
 
       const response = await apiClient.post(
-        "/service/uploadImage",
+        "/post/uploadImage",
         imageFormData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -99,7 +97,7 @@ const AddService = () => {
     try {
       setLoading(true);
       await apiClient.post(
-        "/service/deleteImage",
+        "/post/deleteImage",
         { image: formData.image },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -130,16 +128,16 @@ const AddService = () => {
     try {
       setLoading(true);
       await apiClient.post(
-        "/service/new",
+        "/post/new",
         formData,
         { headers: { "Content-Type": "application/json" } }
       );
 
-      toast.success("Service added successfully!");
+      toast.success("Post added successfully!");
       resetForm();
     } catch (error) {
       console.error(error);
-      toast.error("Failed to add service. Please try again.");
+      toast.error("Failed to add post. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -157,41 +155,30 @@ const AddService = () => {
         onSubmit={handleSubmit}
         className="bg-white p-6 w-full max-w-md rounded shadow-md space-y-4"
       >
-        <h2 className="text-2xl font-bold text-center mb-4">Add New Service</h2>
+        <h2 className="text-2xl font-bold text-center mb-4">Add New Post</h2>
 
-        <Label htmlFor="name">Service Name</Label>
+        <Label htmlFor="name">Post Title</Label>
         <Input
           id="name"
           name="name"
           type="text"
-          placeholder="Enter service name"
+          placeholder="Enter post title"
           value={formData.name}
           onChange={handleInputChange}
           required
         />
 
-        <Label htmlFor="price">Price</Label>
-        <Input
-          id="price"
-          name="price"
-          type="text"
-          placeholder="Enter service price"
-          value={formData.price}
-          onChange={handleInputChange}
-          required
-        />
-
-        <Label htmlFor="description">Description</Label>
+        <Label htmlFor="comment">Comment</Label>
         <Textarea
-          id="description"
-          name="description"
-          placeholder="Enter service description"
-          value={formData.description}
+          id="comment"
+          name="comment"
+          placeholder="Enter comment"
+          value={formData.comment}
           onChange={handleInputChange}
           required
         />
 
-        <Label htmlFor="image">Service Image</Label>
+        <Label htmlFor="image">Post Image</Label>
         <div className="flex flex-col gap-2">
           {!formData.image.url && !preview && (
             <Input
@@ -243,11 +230,11 @@ const AddService = () => {
           className="w-full bg-green-500 text-white hover:bg-green-600"
           disabled={loading}
         >
-          {loading ? "Submitting..." : "Add Service"}
+          {loading ? "Submitting..." : "Add Post"}
         </Button>
       </form>
     </section>
   );
 };
 
-export default AddService;
+export default AddPost;

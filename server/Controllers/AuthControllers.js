@@ -113,7 +113,7 @@ const forgotPassword = CatchAsyncError(async (req, res, next) => {
     user.resetPasswordToken = undefined;
     user.resetPasswordTokenExpire = undefined;
     await user.save({ validateBeforeSave: false });
-    return next(new ErrorHandler(error.message, 500));
+    return next(error);
   }
 });
 
@@ -162,11 +162,19 @@ const resetPassword = CatchAsyncError(async (req, res, next) => {
     });
   }
 });
+const logOut = CatchAsyncError(async(req,res,next) =>{
+  res.clearCookie("token");
+  res.json({
+    message: "Logged out successfully",
+    success: true,
+  });
+})
 
 module.exports = {
   registerUser,
   loginUser,
   isAdmin,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  logOut,
 };

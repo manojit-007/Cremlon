@@ -4,6 +4,8 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const AuthRoute = require("./Routers/AuthRoute");
 const ServiceRoute = require("./Routers/ServiceRoute");
+const PostRoute = require("./Routers/PostRoute");
+const SendMessageRoute = require("./Routers/SendMessageRoute");
 const app = express();
 process.on("uncaughtException", (err) => {
   console.log(`Error: ${err.message}`);
@@ -30,10 +32,12 @@ main()
   .catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/cremlon");
+  await mongoose.connect(process.env.MONGODB_URL);
 }
 app.use("/auth", AuthRoute);
 app.use("/service", ServiceRoute);
+app.use("/post", PostRoute);
+app.use("/sendMessage", SendMessageRoute);
 
 app.get("/", (req, res) => {
   res.send("Server and page is ready");

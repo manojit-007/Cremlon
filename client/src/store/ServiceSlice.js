@@ -9,6 +9,7 @@ export const getAllServices = createAsyncThunk(
       const response = await apiClient.get(`service/allService`, {
         withCredentials: true,
       });
+      console.log(response.data);
       return response.data.data; // Assuming the API returns a list of services
     } catch (error) {
       return rejectWithValue(
@@ -44,7 +45,7 @@ const ServiceSlice = createSlice({
       })
       .addCase(getAllServices.fulfilled, (state, action) => {
         state.loading = false;
-        state.services = action.payload; // Populate services with fetched data
+        state.services = action.payload;
       })
       .addCase(getAllServices.rejected, (state, action) => {
         state.loading = false;

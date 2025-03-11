@@ -61,7 +61,7 @@ export const logout = createAsyncThunk(
   "auth/logoutUser",
   async (_, { rejectWithValue }) => {
     try {
-      await apiClient.post("/user/logout", {}, { withCredentials: true });
+      await apiClient.post("/auth/logout", {}, { withCredentials: true });
       localStorage.setItem("token", "");
 
       return true;
@@ -199,8 +199,7 @@ const AuthSlice = createSlice({
         state.loading = true;
       })
       .addCase(logout.fulfilled, (state) => {
-        state.isAuthenticated = false;
-        state.user = null;
+        state.isAdmin = false;
         state.loading = false;
       })
       .addCase(logout.rejected, (state, action) => {
